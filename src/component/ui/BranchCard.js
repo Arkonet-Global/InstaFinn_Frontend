@@ -1,3 +1,4 @@
+import React from "react";
 import BankSettingForm from "../form/BankSettingForm";
 import ApplicantName from "./ApplicantName";
 import SkeletonLoader from "./SkeletonLoader";

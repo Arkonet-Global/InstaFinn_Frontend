@@ -1,5 +1,6 @@
 "use client";
 
+
 import React, { useEffect, useState } from "react";
 import PageHeader from "../Header/PageHeader";
 import LoanCard from "../ui/LoanCard";
@@ -117,7 +118,7 @@ const LoanApplications = ({ applications }) => {
 };
 
 const handleModalClose = () => setModalData(null);
-   
+  
 
   return (
     <>
@@ -169,7 +170,7 @@ const handleModalClose = () => setModalData(null);
           }
           modalData={modalData}
           editText="Edit"
-          
+         
           showFooter={
             ["admin", "masteradmin", "agent", "subagent", "bankoperator"].includes(role)
           }

@@ -180,8 +180,7 @@
 // import LoanAmount from "./LoanAmount";
 // import LoanDetails from "./LoanDetails";
 // import SkeletonLoader from "./SkeletonLoader";
-// import CommonModal from "./CommonModal";
-
+// import UserCard from "./UserCard";
 
 // const LoanCard = ({
 //   data,
@@ -203,7 +202,6 @@
 //   onClick = () => {},
 // }) => {
 //   const [newData, setNewData] = useState(data);
-//   const [showActionModal, setShowActionModal] = useState(false);
 
 //   useEffect(() => {
 //     if (data?.personalInfo) {
@@ -311,94 +309,27 @@
 //               <LoanAmount amount={newData.amount} />
 //             </>
 //           )}
-
-//           {/* ✅ Role-based buttons */}
-//           <div className="mt-2">
-//             {["admin", "masterAdmin"].includes(role) && (
-//               <span className="text-gray-400 text-xs italic">View Only</span>
-//             )}
-
-//             {["bankOperator"].includes(role) && (
-//               <button
-//                 className="bg-blue-500 hover:bg-blue-600 text-white text-sm py-1 px-3 rounded"
-//                 onClick={(e) => {
-//                   e.stopPropagation();
-//                   setShowModal(true);
-//                 }}
-//               >
-//                 Action
-//               </button>
-//             )}
-
-//             {["agent", "subAgent"].includes(role) && (
-//               <button
-//                 className="bg-green-500 hover:bg-green-600 text-white text-sm py-1 px-3 rounded"
-//                 onClick={(e) => {
-//                   e.stopPropagation();
-//                   // You can add save logic here
-//                 }}
-//               >
-//                 Save
-//               </button>
-//             )}
-//           </div>
+          
 //         </div>
 //       </div>
-      
 
-//       {/* Conditional forms below the card */}
+//       {/* Conditional forms (settings, branches) */}
 //       {branchId === newData?._id && isSetting && (
 //         <BankSettingForm branchId={branchId} bankId={bankId} />
 //       )}
-
 //       {bankId === newData?._id && showBranch && (
 //         <BankBranchForm bankId={bankId} />
 //       )}
-
-//       {showActionModal && (
-//       <CommonModal
-//       open={showModal}
-//       handleClose={() => setShowModal(false)}
-//       title="Loan Application Details"
-//       showFooter={role === "bankOperator"} // show footer only for bank operators
-//       onSave={() => {
-//         // handle bankOperator action
-//         console.log("Action on loan:", newData._id);
-//         setShowModal(false);
-//       }}
-//       onCancel={() => setShowModal(false)}
-//       saveText="Action"
-//       cancelText="Close"
-//     >
-//       <div className="p-4 space-y-2">
-//         <p><strong>Applicant:</strong> {newData.applicantName}</p>
-//         <p><strong>Status:</strong> {newData.status}</p>
-//         <p><strong>Loan Type:</strong> {newData.loanType}</p>
-//         <p><strong>Amount:</strong> ₹{newData.amount}</p>
-//         <p><strong>CIBIL Score:</strong> {newData.cibilScore}</p>
-
-//         {role === "bankOperator" && (
-//           <textarea
-//             rows={3}
-//             className="w-full border rounded p-2 mt-2"
-//             placeholder="Add remarks..."
-//           />
-//         )}
-
-//         {["admin", "masterAdmin"].includes(role) && (
-//           <p className="text-gray-500 italic mt-2">View-only mode</p>
-//         )}
-//       </div>
-//     </CommonModal>
-
-//     )}
-
 //     </div>
 //   );
 // };
 
-// export default LoanCard;  //working ui 
-import { useEffect, useState } from "react";
+// export default LoanCard;
+
+"use client";
+
+import { use, useEffect, useState } from "react";
+import { FaCogs, FaBuilding } from "react-icons/fa";
 import BankBranchForm from "../form/BankBranchForm";
 import BankSettingForm from "../form/BankSettingForm";
 import ApplicantName from "./ApplicantName";
@@ -406,7 +337,6 @@ import CibilScore from "./CibilScore";
 import LoanAmount from "./LoanAmount";
 import LoanDetails from "./LoanDetails";
 import SkeletonLoader from "./SkeletonLoader";
-import UserCard from "./UserCard";
 
 const LoanCard = ({
   data,
@@ -458,7 +388,7 @@ const LoanCard = ({
       onClick={onClick}
     >
       <div className="border border-gray-300 rounded-lg p-2 px-4 flex flex-col sm:flex-row justify-between items-center shadow-md w-full max-w-3xl">
-        {/* Left section */}
+        {/* Left Section */}
         <div className="flex flex-col w-full sm:w-4/5">
           {newData.loanType && newData.status && (
             <LoanDetails loanType={newData.loanType} status={newData.status} />
@@ -477,9 +407,10 @@ const LoanCard = ({
             <ApplicantName fullName={newData.applicantName} />
           )}
 
+          {/* 🔧 Setting */}
           {isSetting && (
-            <p
-              className="text-xs font-medium cursor-pointer"
+            <div
+              className="text-sm font-semibold text-yellow-500 flex items-center gap-1 cursor-pointer mt-1"
               onClick={(e) => {
                 e.stopPropagation();
                 branchId === newData._id
@@ -487,13 +418,14 @@ const LoanCard = ({
                   : (setBankId(newData.bankId), setBranchId(newData._id));
               }}
             >
-              Setting
-            </p>
+              <FaCogs className="text-yellow-500" /> Setting
+            </div>
           )}
 
+          {/* 🏢 Branch */}
           {showBranch && (
-            <p
-              className="text-xs font-medium cursor-pointer"
+            <div
+              className="text-sm font-semibold text-yellow-500 flex items-center gap-1 cursor-pointer mt-1"
               onClick={(e) => {
                 e.stopPropagation();
                 bankId === newData._id
@@ -501,12 +433,12 @@ const LoanCard = ({
                   : (setBankId(newData._id), setBranchId(null));
               }}
             >
-              Branch
-            </p>
+              <FaBuilding className="text-yellow-500" /> Branch
+            </div>
           )}
         </div>
 
-        {/* Middle section: CIBIL */}
+        {/* Middle Section: CIBIL */}
         <div className="flex flex-col items-center w-full sm:w-3/4 mt-4 sm:mt-0">
           {newData.cibilScore && (
             <>
@@ -527,7 +459,7 @@ const LoanCard = ({
           )}
         </div>
 
-        {/* Right section: Amount */}
+        {/* Right Section: Amount */}
         <div className="flex flex-col items-center w-full sm:w-3/4 mt-4 sm:mt-0">
           {newData.amount && (
             <>
@@ -535,14 +467,14 @@ const LoanCard = ({
               <LoanAmount amount={newData.amount} />
             </>
           )}
-          
         </div>
       </div>
 
-      {/* Conditional forms (settings, branches) */}
+      {/* Conditional Forms */}
       {branchId === newData?._id && isSetting && (
         <BankSettingForm branchId={branchId} bankId={bankId} />
       )}
+
       {bankId === newData?._id && showBranch && (
         <BankBranchForm bankId={bankId} />
       )}
@@ -551,3 +483,5 @@ const LoanCard = ({
 };
 
 export default LoanCard;
+
+

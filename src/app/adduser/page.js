@@ -1,49 +1,99 @@
+// "use client";
+
+// import React, { useEffect, useMemo, useState } from "react";
+// import Layout from "@/component/Layout/layout";
+// import LoanApplications from "@/component/Applications/LoanApplications";
+// import CreateUser from "@/component/CreateUsers/CreateUser";
+// import CreateLender from "@/component/CreateUsers/CreateLender";
+// import CreateClient from "@/component/CreateUsers/CreateClient";
+// import { useRouter } from "next/navigation";
+// import useGetQueryParam from "@/component/utils/commonFunctions";
+// import CreateSubUser from "@/component/Applications/SubUserApplicant";
+// import CreateSubUsers from "@/component/CreateUsers/CreateSubUser";
+// import CreateBank from "@/component/CreateUsers/CreateBank";
+// import { getBanks } from "@/lib";
+
+// const AddUser = () => {
+//   const [collapsed,   setCollapsed] = useState(false);
+//   const user = useGetQueryParam("user");
+//   const applicationId = useGetQueryParam("id");
+
+//   console.log(user)
+//   const userCreation=useMemo(() => {
+//     if (user?.toLowerCase() == "agent") {
+//       return <CreateUser userRole={"agent"} />;
+//     } else if (user?.toLowerCase() == "lender") {
+//       return <CreateLender />;
+//     } else if (user?.toLowerCase() == "client") {
+//       return <CreateClient applicationId={applicationId} />;
+//     } else if (user?.toLowerCase() == "subagent") {
+//       return <CreateUser userRole={"subAgent"} />;
+//     } else if(user?.toLowerCase() == "bank"){
+//       return <CreateBank />
+//     } else  if (user?.toLowerCase() == "admin") {
+//       return <CreateUser userRole={"admin"} />;
+//     } else {
+//       return <div className="text-center text-red-500 text-2xl font-bold mt-10">
+//         <h1>Invalid User</h1>
+//       </div>
+//     }
+//   }, [user, applicationId]);
+//   return (
+//     <Layout setSidebarCollapsed={setCollapsed}>
+//       {userCreation}      
+//     </Layout>
+//   );
+// };
+
+// export default AddUser;
+
+
+
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, Suspense } from "react";
 import Layout from "@/component/Layout/layout";
-import LoanApplications from "@/component/Applications/LoanApplications";
 import CreateUser from "@/component/CreateUsers/CreateUser";
 import CreateLender from "@/component/CreateUsers/CreateLender";
 import CreateClient from "@/component/CreateUsers/CreateClient";
-import { useRouter } from "next/navigation";
-import useGetQueryParam from "@/component/utils/commonFunctions";
-import CreateSubUser from "@/component/Applications/SubUserApplicant";
-import CreateSubUsers from "@/component/CreateUsers/CreateSubUser";
 import CreateBank from "@/component/CreateUsers/CreateBank";
-import { getBanks } from "@/lib";
+import useGetQueryParam from "@/component/utils/commonFunctions";
 
-const AddUser = () => {
-  const [collapsed,   setCollapsed] = useState(false);
-  
-  const router = useRouter();
+const AddUserContent = () => {
+  const [collapsed, setCollapsed] = useState(false);
   const user = useGetQueryParam("user");
   const applicationId = useGetQueryParam("id");
-  console.log(user)
-  const userCreation=useMemo(() => {
-    if (user?.toLowerCase() == "agent") {
-      return <CreateUser userRole={"agent"} />;
-    } else if (user?.toLowerCase() == "lender") {
-      return <CreateLender />;
-    } else if (user?.toLowerCase() == "client") {
-      return <CreateClient applicationId={applicationId} />;
-    } else if (user?.toLowerCase() == "subagent") {
-      return <CreateUser userRole={"subAgent"} />;
-    } else if(user?.toLowerCase() == "bank"){
-      return <CreateBank />
-    } else  if (user?.toLowerCase() == "admin") {
-      return <CreateUser userRole={"admin"} />;
-    } else {
-      return <div className="text-center text-red-500 text-2xl font-bold mt-10">
-        <h1>Invalid User</h1>
-      </div>
+
+  const userCreation = useMemo(() => {
+    switch (user?.toLowerCase()) {
+      case "agent":
+        return <CreateUser userRole={"agent"} />;
+      case "lender":
+        return <CreateLender />;
+      case "client":
+        return <CreateClient applicationId={applicationId} />;
+      case "subagent":
+        return <CreateUser userRole={"subAgent"} />;
+      case "bank":
+        return <CreateBank />;
+      case "admin":
+        return <CreateUser userRole={"admin"} />;
+      default:
+        return (
+          <div className="text-center text-red-500 text-2xl font-bold mt-10">
+            <h1>Invalid User</h1>
+          </div>
+        );
     }
   }, [user, applicationId]);
-  return (
-    <Layout setSidebarCollapsed={setCollapsed}>
-      {userCreation}      
-    </Layout>
-  );
+
+  return <Layout setSidebarCollapsed={setCollapsed}>{userCreation}</Layout>;
 };
+
+const AddUser = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <AddUserContent />
+  </Suspense>
+);
 
 export default AddUser;

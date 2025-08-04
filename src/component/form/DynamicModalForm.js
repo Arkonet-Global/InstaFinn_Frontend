@@ -10,6 +10,8 @@ export const DynamicModalForm = ({
   inputFields,
   handleInputChange,
 }) => {
+
+  
  
 
   return (
@@ -19,14 +21,15 @@ export const DynamicModalForm = ({
         title="Edit User"
         saveText="Save"
         cancelText="Cancel"
-        printText="Print" 
+        //printText="Print" 
         showFooter
         modalData={formData}
         onSave={onSubmit}
         onCancel={onClose}
-        onPrint={handlePrint} 
+        //onPrint={handlePrint} 
           
       >
+      
         <CommonFields
           formData={formData}
           setFormData={setFormData}
@@ -35,12 +38,8 @@ export const DynamicModalForm = ({
           setSections={() => {}}
           onInputChange={handleInputChange}
         />
-
-        
+      
       </CommonModal>
-
-     
-   
     </>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useState } from "react";
 import Layout from "@/component/Layout/layout";
 import Accept_Reject from "@/component/Accept_Reject/Accept_Reject";
 
@@ -9,7 +9,9 @@ const AcceptReject = () => {
 
   return (
     <Layout setSidebarCollapsed={setCollapsed}>
-        <Accept_Reject  isBank />
+      <Suspense fallback={<div className="p-4">Loading Accept/Reject...</div>}>
+        <Accept_Reject isBank />
+      </Suspense>
     </Layout>
   );
 };
