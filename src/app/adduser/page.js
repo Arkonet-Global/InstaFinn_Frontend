@@ -38,11 +38,11 @@
 //       </div>
 //     }
 //   }, [user, applicationId]);
-//   return (
-//     <Layout setSidebarCollapsed={setCollapsed}>
-//       {userCreation}      
-//     </Layout>
-//   );
+  // return (
+  //   <Layout setSidebarCollapsed={setCollapsed}>
+  //     {userCreation}      
+  //   </Layout>
+  // );
 // };
 
 // export default AddUser;
@@ -90,10 +90,13 @@ const AddUserContent = () => {
   return <Layout setSidebarCollapsed={setCollapsed}>{userCreation}</Layout>;
 };
 
-const AddUser = () => (
-  <Suspense fallback={<div>Loading...</div>}>
-    <AddUserContent />
-  </Suspense>
-);
+const AddUser = () => {
+  return (
+    <Suspense fallback={<div className="text-center text-gray-500 text-xl mt-10">Loading form...</div>}>
+      <AddUserContent />
+    </Suspense>
+  );
+  
+};
 
 export default AddUser;

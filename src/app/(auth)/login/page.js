@@ -238,10 +238,10 @@ import { showToast } from "@/utils/toastUtils";
 
 // ✅ Validation schema
 const schema = yup.object().shape({
-  mobile: yup
+  email: yup
     .string()
-    .matches(/^\d{10}$/, "User ID must be a 10-digit number")
-    .required("User ID is required"),
+    .email("Invalid email address")
+    .required("Email is required"),
 });
 
 const Login = () => {
@@ -259,16 +259,16 @@ const Login = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: { mobile: "" },
+    defaultValues: { email: "" },
   });
 
-  const onSubmit = async ({ mobile }) => {
+  const onSubmit = async ({ email }) => {
     setLoading(true);
     setError("");
 
     try {
       if (!otpSent) {
-        const response = await sendOTP({ mobileNumber: mobile });
+        const response = await sendOTP({ email });
 
         if (response.status === 200) {
           showToast("success", response.message || "OTP sent successfully");
@@ -278,7 +278,7 @@ const Login = () => {
           setError(response.message || "OTP sending failed");
         }
       } else {
-        const response = await loginApi({ mobileNumber: mobile, otp });
+        const response = await loginApi({ email, otp });
 
         if (response?.status === 200) {
           const { user, token } = response.data;
@@ -318,26 +318,20 @@ const Login = () => {
               <Title title="User ID" />
               <Controller
                 control={control}
-                name="mobile"
+                name="email"
                 render={({ field }) => (
                   <InputField
                     {...field}
-                    label="User ID"
-                    placeholder="Enter your User ID"
-                    maxLength={10}
-                    inputMode="numeric"
-                    onChange={(e) => {
-                      const digitsOnly = e.target.value.replace(/\D/g, "");
-                      field.onChange(digitsOnly);
-                    }}
+                    label="Email"
+                    placeholder="Enter your email"
                     className="shadow-inner"
-                    type="text"
+                    type="email"
                   />
                 )}
               />
-              {errors.mobile && (
+              {errors.email && (
                 <p className="text-sm text-red-500 mt-1">
-                  {errors.mobile.message}
+                  {errors.email.message}
                 </p>
               )}
             </div>

@@ -240,6 +240,7 @@ export default function Users() {
       <UsersClient />
     </Suspense>
   );
+
 }
 
 
